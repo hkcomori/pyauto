@@ -121,6 +121,54 @@ class MouseMiddleClick( pyautocore.Input ):
         pyautocore.Input.__init__(self)
         self.setMouseMiddleClick( x, y )
 
+## 仮想的なマウスのX1ボタンダウンを生成するクラス
+class MouseX1Down( pyautocore.Input ):
+
+    def __init__( self, x, y ):
+
+        pyautocore.Input.__init__(self)
+        self.setMouseX1Down( x, y )
+
+## 仮想的なマウスのX1ボタンアップを生成するクラス
+class MouseX1Up( pyautocore.Input ):
+
+    def __init__( self, x, y ):
+
+        pyautocore.Input.__init__(self)
+        self.setMouseX1Up( x, y )
+
+## 仮想的なマウスのX1ボタンのダウンとアップを生成するクラス
+class MouseX1Click( pyautocore.Input ):
+
+    def __init__( self, x, y ):
+
+        pyautocore.Input.__init__(self)
+        self.setMouseX1Click( x, y )
+
+## 仮想的なマウスのX2ボタンダウンを生成するクラス
+class MouseX2Down( pyautocore.Input ):
+
+    def __init__( self, x, y ):
+
+        pyautocore.Input.__init__(self)
+        self.setMouseX2Down( x, y )
+
+## 仮想的なマウスのX2ボタンアップを生成するクラス
+class MouseX2Up( pyautocore.Input ):
+
+    def __init__( self, x, y ):
+
+        pyautocore.Input.__init__(self)
+        self.setMouseX2Up( x, y )
+
+## 仮想的なマウスのX2ボタンのダウンとアップを生成するクラス
+class MouseX2Click( pyautocore.Input ):
+
+    def __init__( self, x, y ):
+
+        pyautocore.Input.__init__(self)
+        self.setMouseX2Click( x, y )
+
 ## 仮想的なマウスのホイール回転を生成するクラス
 class MouseWheel( pyautocore.Input ):
 

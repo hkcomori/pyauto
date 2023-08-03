@@ -1,4 +1,4 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 
 #include <windows.h>
 
@@ -32,6 +32,18 @@ static int OnMouseButton( WPARAM wParam, MSLLHOOKSTRUCT * pmousellhook, PyObject
 	case WM_MBUTTONUP:
 	case WM_MBUTTONDBLCLK:
 		vk = VK_MBUTTON;
+		break;
+	case WM_XBUTTONDOWN:
+	case WM_XBUTTONUP:
+	case WM_XBUTTONDBLCLK:
+		if ( (short)HIWORD(pmousellhook->mouseData) == XBUTTON1 )
+		{
+			vk = VK_XBUTTON1;
+		}
+		else
+		{
+			vk = VK_XBUTTON2;
+		}
 		break;
 	}
 
@@ -120,6 +132,7 @@ LRESULT CALLBACK MouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
 	case WM_MBUTTONDOWN:
+	case WM_XBUTTONDOWN:
 		if( g.pyhook->mousedown )
 		{
 			int result = OnMouseButton( wParam, pmousellhook, g.pyhook->mousedown );
@@ -133,6 +146,7 @@ LRESULT CALLBACK MouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
 	case WM_MBUTTONUP:
+	case WM_XBUTTONUP:
 		if( g.pyhook->mouseup )
 		{
 			int result = OnMouseButton( wParam, pmousellhook, g.pyhook->mouseup );
@@ -146,6 +160,7 @@ LRESULT CALLBACK MouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDBLCLK:
 	case WM_RBUTTONDBLCLK:
 	case WM_MBUTTONDBLCLK:
+	case WM_XBUTTONDBLCLK:
 		if( g.pyhook->mousedblclk )
 		{
 			int result = OnMouseButton( wParam, pmousellhook, g.pyhook->mousedblclk );

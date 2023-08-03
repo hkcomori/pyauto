@@ -1714,6 +1714,22 @@ static PyObject * Input_repr( PyObject * self )
 					{
 						_snprintf_s( buf, sizeof(buf), _TRUNCATE, "MouseMiddleUp(%d,%d)", input.mi.dx, input.mi.dy );
 					}
+					else if( (input.mi.dwFlags & MOUSEEVENTF_XDOWN) && ((short)HIWORD(input.mi.mouseData) & XBUTTON1) )
+					{
+						_snprintf_s( buf, sizeof(buf), _TRUNCATE, "MouseX1Down(%d,%d)", input.mi.dx, input.mi.dy );
+					}
+					else if( (input.mi.dwFlags & MOUSEEVENTF_XUP) && ((short)HIWORD(input.mi.mouseData) & XBUTTON1) )
+					{
+						_snprintf_s( buf, sizeof(buf), _TRUNCATE, "MouseX1Up(%d,%d)", input.mi.dx, input.mi.dy );
+					}
+					else if( (input.mi.dwFlags & MOUSEEVENTF_XDOWN) && ((short)HIWORD(input.mi.mouseData) & XBUTTON2) )
+					{
+						_snprintf_s( buf, sizeof(buf), _TRUNCATE, "MouseX2Down(%d,%d)", input.mi.dx, input.mi.dy );
+					}
+					else if( (input.mi.dwFlags & MOUSEEVENTF_XUP) && ((short)HIWORD(input.mi.mouseData) & XBUTTON2) )
+					{
+						_snprintf_s( buf, sizeof(buf), _TRUNCATE, "MouseX2Up(%d,%d)", input.mi.dx, input.mi.dy );
+					}
 					else if( input.mi.dwFlags & MOUSEEVENTF_WHEEL )
 					{
 						_snprintf_s( buf, sizeof(buf), _TRUNCATE, "MouseWheel(%d,%d,%d)", input.mi.dx, input.mi.dy, input.mi.mouseData );
@@ -1757,6 +1773,14 @@ static PyObject * Input_repr( PyObject * self )
 					else if( input.mi.dwFlags & MOUSEEVENTF_MIDDLEDOWN )
 					{
 						_snprintf_s( buf, sizeof(buf), _TRUNCATE, "MouseMiddleClick(%d,%d)", input.mi.dx, input.mi.dy );
+					}
+					else if( (input.mi.dwFlags & MOUSEEVENTF_XDOWN) && ((short)HIWORD(input.mi.mouseData) == XBUTTON1) )
+					{
+						_snprintf_s( buf, sizeof(buf), _TRUNCATE, "MouseX1Click(%d,%d)", input.mi.dx, input.mi.dy );
+					}
+					else if( (input.mi.dwFlags & MOUSEEVENTF_XDOWN) && ((short)HIWORD(input.mi.mouseData) == XBUTTON2) )
+					{
+						_snprintf_s( buf, sizeof(buf), _TRUNCATE, "MouseX2Click(%d,%d)", input.mi.dx, input.mi.dy );
 					}
 				}
 				break;
@@ -2202,6 +2226,176 @@ static PyObject * Input_setMouseMiddleClick(PyObject* self, PyObject* args)
 	return Py_None;
 }
 
+static PyObject * Input_setMouseX1Down(PyObject* self, PyObject* args)
+{
+	int x,y;
+
+	if( ! PyArg_ParseTuple(args, "ii", &x, &y ) )
+        return NULL;
+
+	MousePositionAsPixel( &x, &y );
+
+	((PyObject_Input*)self)->num = 1;
+
+	INPUT & input = ((PyObject_Input*)self)->input[0];
+	input.type = INPUT_MOUSE;
+	input.mi.dx = x;
+	input.mi.dy = y;
+	input.mi.mouseData = XBUTTON1 << 16;
+	input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_XDOWN;
+	input.mi.dwExtraInfo = 0;
+	input.mi.time = 0;
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject * Input_setMouseX1Up(PyObject* self, PyObject* args)
+{
+	int x,y;
+
+	if( ! PyArg_ParseTuple(args, "ii", &x, &y ) )
+        return NULL;
+
+	MousePositionAsPixel( &x, &y );
+
+	((PyObject_Input*)self)->num = 1;
+
+	INPUT & input = ((PyObject_Input*)self)->input[0];
+	input.type = INPUT_MOUSE;
+	input.mi.dx = x;
+	input.mi.dy = y;
+	input.mi.mouseData = XBUTTON1 << 16;
+	input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_XUP;
+	input.mi.dwExtraInfo = 0;
+	input.mi.time = 0;
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject * Input_setMouseX1Click(PyObject* self, PyObject* args)
+{
+	int x,y;
+
+	if( ! PyArg_ParseTuple(args, "ii", &x, &y ) )
+        return NULL;
+
+	MousePositionAsPixel( &x, &y );
+
+	((PyObject_Input*)self)->num = 2;
+
+	{
+		INPUT & input = ((PyObject_Input*)self)->input[0];
+		input.type = INPUT_MOUSE;
+		input.mi.dx = x;
+		input.mi.dy = y;
+		input.mi.mouseData = XBUTTON1 << 16;
+		input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_XDOWN;
+		input.mi.dwExtraInfo = 0;
+		input.mi.time = 0;
+	}
+
+	{
+		INPUT & input = ((PyObject_Input*)self)->input[1];
+		input.type = INPUT_MOUSE;
+		input.mi.dx = x;
+		input.mi.dy = y;
+		input.mi.mouseData = XBUTTON1 << 16;
+		input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_XUP;
+		input.mi.dwExtraInfo = 0;
+		input.mi.time = 0;
+	}
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject * Input_setMouseX2Down(PyObject* self, PyObject* args)
+{
+	int x,y;
+
+	if( ! PyArg_ParseTuple(args, "ii", &x, &y ) )
+        return NULL;
+
+	MousePositionAsPixel( &x, &y );
+
+	((PyObject_Input*)self)->num = 1;
+
+	INPUT & input = ((PyObject_Input*)self)->input[0];
+	input.type = INPUT_MOUSE;
+	input.mi.dx = x;
+	input.mi.dy = y;
+	input.mi.mouseData = XBUTTON2 << 16;
+	input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_XDOWN;
+	input.mi.dwExtraInfo = 0;
+	input.mi.time = 0;
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject * Input_setMouseX2Up(PyObject* self, PyObject* args)
+{
+	int x,y;
+
+	if( ! PyArg_ParseTuple(args, "ii", &x, &y ) )
+        return NULL;
+
+	MousePositionAsPixel( &x, &y );
+
+	((PyObject_Input*)self)->num = 1;
+
+	INPUT & input = ((PyObject_Input*)self)->input[0];
+	input.type = INPUT_MOUSE;
+	input.mi.dx = x;
+	input.mi.dy = y;
+	input.mi.mouseData = XBUTTON2 << 16;
+	input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_XUP;
+	input.mi.dwExtraInfo = 0;
+	input.mi.time = 0;
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject * Input_setMouseX2Click(PyObject* self, PyObject* args)
+{
+	int x,y;
+
+	if( ! PyArg_ParseTuple(args, "ii", &x, &y ) )
+        return NULL;
+
+	MousePositionAsPixel( &x, &y );
+
+	((PyObject_Input*)self)->num = 2;
+
+	{
+		INPUT & input = ((PyObject_Input*)self)->input[0];
+		input.type = INPUT_MOUSE;
+		input.mi.dx = x;
+		input.mi.dy = y;
+		input.mi.mouseData = XBUTTON2 << 16;
+		input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_XDOWN;
+		input.mi.dwExtraInfo = 0;
+		input.mi.time = 0;
+	}
+
+	{
+		INPUT & input = ((PyObject_Input*)self)->input[1];
+		input.type = INPUT_MOUSE;
+		input.mi.dx = x;
+		input.mi.dy = y;
+		input.mi.mouseData = XBUTTON2 << 16;
+		input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_XUP;
+		input.mi.dwExtraInfo = 0;
+		input.mi.time = 0;
+	}
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
 static PyObject * Input_setMouseWheel(PyObject* self, PyObject* args)
 {
 	int x,y;
@@ -2405,6 +2599,12 @@ static PyMethodDef Input_methods[] = {
     { "setMouseMiddleDown", Input_setMouseMiddleDown, METH_VARARGS, "" },
     { "setMouseMiddleUp", Input_setMouseMiddleUp, METH_VARARGS, "" },
     { "setMouseMiddleClick", Input_setMouseMiddleClick, METH_VARARGS, "" },
+    { "setMouseX1Down", Input_setMouseX1Down, METH_VARARGS, "" },
+    { "setMouseX1Up", Input_setMouseX1Up, METH_VARARGS, "" },
+    { "setMouseX1Click", Input_setMouseX1Click, METH_VARARGS, "" },
+    { "setMouseX2Down", Input_setMouseX2Down, METH_VARARGS, "" },
+    { "setMouseX2Up", Input_setMouseX2Up, METH_VARARGS, "" },
+    { "setMouseX2Click", Input_setMouseX2Click, METH_VARARGS, "" },
     { "setMouseWheel", Input_setMouseWheel, METH_VARARGS, "" },
 	{ "setMouseHorizontalWheel", Input_setMouseHorizontalWheel, METH_VARARGS, "" },
     { "send", Input_send, METH_STATIC|METH_VARARGS, "" },
